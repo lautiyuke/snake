@@ -1,0 +1,29 @@
+*{
+    padding: 0;
+    margin: 0;
+    font-family: sans-serif;
+}
+
+html{
+    width: 100vw;
+    height: 100vh;
+}
+
+body{
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.gameContainer{
+    width: fit-content;
+    height: fit-content;
+}
+
+#canvas{
+    border: 15px solid #578a34;
+}
