@@ -1,6 +1,9 @@
 const VERDE_CLARO = "#aad751";
 const VERDE_MEDIO = "#a2d149";
-const VERDE_OSCURO = "#578a34";
+
+const COLOR_CABEZA = "#2b4996";
+const COLOR_CUERPO = "#426fe3";
+
 const COLOR_MANZANAS = "red";
 const CANT_MANZANAS = 5;
 
@@ -8,32 +11,28 @@ const ANCHO = 10;
 const ALTO = 9;
 const TAMAÑO_BLOQUE = 60;
 
+const presentacion = document.getElementById("presentacion");
+const gameContainer = document.getElementById("gameContainer");
+const divFin = document.getElementById("fin");
+
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
-
-canvas.width = ANCHO * TAMAÑO_BLOQUE;
-canvas.height = ALTO * TAMAÑO_BLOQUE;
-context.scale(TAMAÑO_BLOQUE, TAMAÑO_BLOQUE);
 
 let tablero = [];
 let manzanas = [];
 let serpiente = {
-	nombre: "Sergio",
 	posiciones: [
 		[Math.floor(ANCHO / 2) - 3, Math.floor(ALTO / 2)],
 		[Math.floor(ANCHO / 2) - 2, Math.floor(ALTO / 2)],
 		[Math.floor(ANCHO / 2) - 1, Math.floor(ALTO / 2)],
 	],
 	direccion: 39,
-	colorCabeza: "#2b4996",
-	color: "#426fe3",
 };
-for (let i = 0; i < CANT_MANZANAS; i++) {
-	dropManzana();
-}
-crearTablero();
 
 function crearTablero() {
+	canvas.width = ANCHO * TAMAÑO_BLOQUE;
+	canvas.height = ALTO * TAMAÑO_BLOQUE;
+	context.scale(TAMAÑO_BLOQUE, TAMAÑO_BLOQUE);
 	for (let i = 0; i < ALTO; i++) {
 		let fila = [];
 		for (let x = 0; x < ANCHO; x++) {
@@ -41,12 +40,16 @@ function crearTablero() {
 		}
 		tablero.push(fila);
 	}
+
+	for (let i = 0; i < CANT_MANZANAS; i++) {
+		dropManzana();
+	}
 }
 
 function dibujar() {
 	tablero.forEach((row, y) => {
 		row.forEach((value, x) => {
-			if (value == 0) {
+			if (value === 0) {
 				if (y % 2 != 0) {
 					if (x % 2 != 0) {
 						context.fillStyle = VERDE_CLARO;
@@ -71,7 +74,7 @@ function dibujar() {
 	});
 
 	for (let y = 0; y < serpiente.posiciones.length - 1; y++) {
-		context.fillStyle = serpiente.color;
+		context.fillStyle = COLOR_CUERPO;
 		context.fillRect(
 			serpiente.posiciones[y][0],
 			serpiente.posiciones[y][1],
@@ -79,7 +82,7 @@ function dibujar() {
 			1
 		);
 	}
-	context.fillStyle = serpiente.colorCabeza;
+	context.fillStyle = COLOR_CABEZA;
 	context.fillRect(
 		serpiente.posiciones[serpiente.posiciones.length - 1][0],
 		serpiente.posiciones[serpiente.posiciones.length - 1][1],
@@ -125,131 +128,77 @@ function checkColision(array, nuevaPos) {
 	return false;
 }
 
-function perdiste() {
+function fin() {
 	if (serpiente.posiciones.length >= ANCHO * ALTO) {
-		console.log("Ganaste!");
+		setTimeout(() => {
+			console.log("Ganaste!");
+			gameContainer.style.display = "none";
+			divFin.innerHTML = "<h1>Ganaste!</h1>";
+			divFin.style.background = "green";
+			divFin.style.display = "flex";
+		}, 1000);
 	} else {
-		console.log("Perdiste!");
+		setTimeout(() => {
+			console.log("Perdiste!");
+			gameContainer.style.display = "none";
+			divFin.innerHTML = "<h1>Perdiste :(</h1>";
+			divFin.style.background = "red";
+			divFin.style.display = "flex";
+		}, 1000);
 	}
 }
 
-function movimiento(nuevaCabeza) {
-	serpiente.posiciones.push(nuevaCabeza);
-	if (checkColision(manzanas, nuevaCabeza)) {
-		for (let i = 0; i < manzanas.length; i++) {
-			if (manzanas[i][0] === nuevaCabeza[0] && manzanas[i][1] === nuevaCabeza[1]) {
-				manzanas.splice(i, 1);
+function movimiento(nuevaCabeza, index, tope, nuevaDire) {
+	if (
+		nuevaCabeza[index] >= 0 &&
+		nuevaCabeza[index] < tope &&
+		!checkColision(serpiente.posiciones, nuevaCabeza)
+	) {
+		serpiente.direccion = nuevaDire;
+		serpiente.posiciones.push(nuevaCabeza);
+		if (checkColision(manzanas, nuevaCabeza)) {
+			for (let i = 0; i < manzanas.length; i++) {
+				if (
+					manzanas[i][0] === nuevaCabeza[0] &&
+					manzanas[i][1] === nuevaCabeza[1]
+				) {
+					manzanas.splice(i, 1);
+				}
 			}
+			dropManzana();
+		} else {
+			serpiente.posiciones.shift();
 		}
-		dropManzana();
 	} else {
-		serpiente.posiciones.shift();
+		fin();
 	}
 }
 
-function LEFT() {
+function moverse(direccion) {
 	let cabeza = serpiente.posiciones[serpiente.posiciones.length - 1];
-	let nuevaCabeza = [cabeza[0] - 1, cabeza[1]];
-
-	if (
-		nuevaCabeza[0] >= 0 &&
-		nuevaCabeza[0] < ANCHO &&
-		!checkColision(serpiente.posiciones, nuevaCabeza)
-	) {
-		serpiente.direccion = 37;
-		movimiento(nuevaCabeza);
-	} else {
-		perdiste();
-	}
-}
-
-function UP() {
-	let cabeza = serpiente.posiciones[serpiente.posiciones.length - 1];
-	let nuevaCabeza = [cabeza[0], cabeza[1] - 1];
-
-	if (
-		nuevaCabeza[1] >= 0 &&
-		nuevaCabeza[1] < ALTO &&
-		!checkColision(serpiente.posiciones, nuevaCabeza)
-	) {
-		serpiente.direccion = 38;
-		movimiento(nuevaCabeza);
-	} else {
-		perdiste();
-	}
-}
-
-function RIGHT() {
-	let cabeza = serpiente.posiciones[serpiente.posiciones.length - 1];
-	let nuevaCabeza = [cabeza[0] + 1, cabeza[1]];
-
-	if (
-		nuevaCabeza[0] >= 0 &&
-		nuevaCabeza[0] < ANCHO &&
-		!checkColision(serpiente.posiciones, nuevaCabeza)
-	) {
-		serpiente.direccion = 39;
-		movimiento(nuevaCabeza);
-	} else {
-		perdiste();
-	}
-}
-
-function DOWN() {
-	let cabeza = serpiente.posiciones[serpiente.posiciones.length - 1];
-	let nuevaCabeza = [cabeza[0], cabeza[1] + 1];
-
-	if (
-		nuevaCabeza[1] >= 0 &&
-		nuevaCabeza[1] < ALTO &&
-		!checkColision(serpiente.posiciones, nuevaCabeza)
-	) {
-		serpiente.direccion = 40;
-		movimiento(nuevaCabeza);
-	} else {
-		perdiste();
-	}
-}
-
-function moverse() {
-	switch (serpiente.direccion) {
-		case 37:
-			LEFT();
-			break;
-		case 38:
-			UP();
-			break;
-		case 39:
-			RIGHT();
-			break;
-		case 40:
-			DOWN();
-			break;
-		default:
-			break;
-	}
-}
-
-function acelerado(evento) {
-	switch (event.keyCode) {
+	switch (direccion) {
 		case 37:
 			if (serpiente.direccion != 39) {
-				LEFT();
+				let nuevaCabeza = [cabeza[0] - 1, cabeza[1]];
+				movimiento(nuevaCabeza, 0, ANCHO, 37);
 			}
 			break;
 		case 38:
 			if (serpiente.direccion != 40) {
-				UP();
+				let nuevaCabeza = [cabeza[0], cabeza[1] - 1];
+				movimiento(nuevaCabeza, 1, ALTO, 38);
 			}
 			break;
 		case 39:
 			if (serpiente.direccion != 37) {
-				RIGHT();
+				let nuevaCabeza = [cabeza[0] + 1, cabeza[1]];
+				movimiento(nuevaCabeza, 0, ANCHO, 39);
 			}
 			break;
 		case 40:
-			if (serpiente.direccion != 38) {
-				DOWN();
+			if (serpiente.direccion != 48) {
+				let nuevaCabeza = [cabeza[0], cabeza[1] + 1];
+				movimiento(nuevaCabeza, 1, ALTO, 40);
 			}
 			break;
 		default:
@@ -257,31 +206,15 @@ function acelerado(evento) {
 	}
 }
 
-document.addEventListener("keydown", (event) => {
-	switch (event.keyCode) {
-		case 37:
-			if (serpiente.direccion != 39 && serpiente.direccion != 37) {
-				LEFT();
-			}
-			break;
-		case 38:
-			if (serpiente.direccion != 40 && serpiente.direccion != 38) {
-				UP();
-			}
-			break;
-		case 39:
-			if (serpiente.direccion != 37 && serpiente.direccion != 39) {
-				RIGHT();
-			}
-			break;
-		case 40:
-			if (serpiente.direccion != 48 && serpiente.direccion != 40) {
-				DOWN();
-			}
-			break;
-		default:
-			break;
-	}
-});
-actualizar();
-let interval = setInterval(moverse, 500);
+function start() {
+	presentacion.style.display = "none";
+	gameContainer.style.display = "flex";
+	crearTablero();
+	let interval = setInterval(() => moverse(serpiente.direccion), 500);
+	document.addEventListener("keydown", (event) => {
+		clearInterval(interval);
+		moverse(event.keyCode);
+		interval = setInterval(() => moverse(serpiente.direccion), 500);
+	});
+	actualizar();
+}

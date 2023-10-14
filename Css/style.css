@@ -17,11 +17,44 @@ body{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    background-color: #e2ffcf;
 }
 
-.gameContainer{
+#presentacion{
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#gameContainer{
     width: fit-content;
     height: fit-content;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    display: none;
+}
+
+#fin{
+    width: 100%;
+    height: 100%;
+
+    justify-content: center;
+    align-items: center;
+
+    display: none;
+}
+
+#fin h1{
+    font-size: 32px;
 }
 
 #canvas{

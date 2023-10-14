@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="Css/style.css">
-    <title>Snake - Yuekelson</title>
-</head>
-<body>
-    <h1>SNAKE</h1>
-    <div class="gameContainer">
-        <canvas id="canvas"></canvas>
-    </div>
-    <h3>Lautaro Yukelson</h3>
-    <script src="Js/index.js"></script>
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="Css/style.css" />
+		<title>Snake - Yuekelson</title>
+	</head>
+	<body>
+		<div id="presentacion" onclick="start()">
+			<h1>Snake JS</h1>
+			<h2>Lautaro Yukelson</h2>
+			<p>Click para comenzar</p>
+		</div>
+		<div id="gameContainer">
+			<h1>SNAKE</h1>
+			<canvas id="canvas"></canvas>
+			<h3>Lautaro Yukelson</h3>
+		</div>
+		<div id="fin" onclick="window.location.reload()"></div>
+		<script src="Js/index.js"></script>
+	</body>
 </html>
