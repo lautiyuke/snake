@@ -133,7 +133,7 @@ function fin() {
 		setTimeout(() => {
 			console.log("Ganaste!");
 			gameContainer.style.display = "none";
-			divFin.innerHTML = "<h1>Ganaste!</h1>";
+			divFin.innerHTML = "<h1>Ganaste!</h1><p>Click para reiniciar</p>";
 			divFin.style.background = "green";
 			divFin.style.display = "flex";
 		}, 1000);
@@ -141,7 +141,7 @@ function fin() {
 		setTimeout(() => {
 			console.log("Perdiste!");
 			gameContainer.style.display = "none";
-			divFin.innerHTML = "<h1>Perdiste :(</h1>";
+			divFin.innerHTML = "<h1>Perdiste :(</h1><p>Click para reiniciar</p>";
 			divFin.style.background = "red";
 			divFin.style.display = "flex";
 		}, 1000);
